@@ -48,7 +48,9 @@ public class ChromeDriverClass {
                                 HashMap<String, Integer> results1 = new HashMap<>();
                                 HashMap<String, Integer> results2 = new HashMap<>();
 
-                                for (int count = 0; count < 53; count++) {
+                                int count = 100;
+
+                                for (int i = 0; i < count; i++) {
 
                                         WebElement prevWeekBtn = driver
                                                         .findElement(By.cssSelector(
@@ -66,6 +68,12 @@ public class ChromeDriverClass {
 
                                         // haetaa numerot jokaisen containerin sisätlä
                                         for (WebElement container : containers) {
+                                                // LUODAAN PERUS LISTAT TÄSSÄ aina uudelleen koska jos ne on loopin
+                                                // ulkopuolella niin siellä
+                                                // on myös ne
+                                                // edellisen viikon numerot jotka lisätään aina uudelleen sitten
+                                                // hashmappiin
+                                                // joka vääristää datan
                                                 /*
                                                  * Luodaan List<WebElement> tässä loopin sisällä, koska jos listat
                                                  * luodaan loopin ulkopuolella, vanhat elementit menettävät pätevyyden
@@ -108,6 +116,7 @@ public class ChromeDriverClass {
                                 List<String> sec = SortArray.sortHashMapSecondary(results2);
 
                                 List<String> result = new ArrayList<>();
+                                result.add(count + " viikon useimmiten osuvat numerot");
                                 result.addAll(prim);
                                 result.add("*****************");
                                 result.addAll(sec);
