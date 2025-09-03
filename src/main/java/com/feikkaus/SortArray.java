@@ -63,7 +63,8 @@ public class SortArray {
         // Muutetaan HashMap listaksi
         List<Map.Entry<String, Integer>> list = new ArrayList<>(givenlist.entrySet());
 
-        // Järjestetään arvon mukaan laskevasti
+        // Järjestetään arvon mukaan laskevasti ( sort ei tee uutta listaa mutta sorted
+        // tekee)
         list.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
         int seventhMax = list.size() > 1 ? list.get(6).getValue() : 0;
 

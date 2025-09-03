@@ -13,8 +13,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import net.bytebuddy.asm.MemberSubstitution.Substitution.Chain.Step.ForField.Write;
-
 public class ChromeDriverClass {
 
         public static void main(String[] args) {
@@ -41,14 +39,17 @@ public class ChromeDriverClass {
                         jackpot.click();
 
                         // löytyykö tuloksia tältä viikolta
-                        WebElement element = driver
-                                        .findElement(By.cssSelector("div.Notification-module_content__9OWys"));
+                        List<WebElement> notificationElements = driver.findElements(
+                                        By.cssSelector("div[class*='Notification-module_content']"));
+                        // WebElement element = driver
+                        // .findElement(By.cssSelector("div.Notification-module_content__9OWys"));
 
-                        if (element.getText().equals("Ei tuloksia")) {
+                        if (!notificationElements.isEmpty()
+                                        && "Ei tuloksia".equals(notificationElements.get(0).getText())) {
                                 HashMap<String, Integer> results1 = new HashMap<>();
                                 HashMap<String, Integer> results2 = new HashMap<>();
 
-                                int count = 100;
+                                int count = 5;
 
                                 for (int i = 0; i < count; i++) {
 
@@ -121,10 +122,86 @@ public class ChromeDriverClass {
                                 result.add("*****************");
                                 result.addAll(sec);
 
-                                WriteToFile.writeListToFile(result, "tulokset.txt");
+                                WriteToFile.writeListToFile(result, "JackpotTulokset.txt");
 
                         } else {
-                                System.out.println("***************");
+                                System.out.println("***************\n\n");
+                                HashMap<String, Integer> results1 = new HashMap<>();
+                                HashMap<String, Integer> results2 = new HashMap<>();
+
+                                int count = 5;
+
+                                for (int i = 0; i < count; i++) {
+
+                                        // ootetaan että varmasti numerot on ladattu
+                                        WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(10));
+                                        wait2.until(ExpectedConditions.visibilityOfElementLocated(
+                                                        By.cssSelector("div.DrawGameResults-module__numberContainer--_6ZFH")));
+
+                                        // haetaan noi containerit jossa numerot on
+                                        List<WebElement> containers = driver.findElements(
+                                                        By.cssSelector("div.DrawGameResults-module__numberContainer--_6ZFH"));
+
+                                        // haetaa numerot jokaisen containerin sisätlä
+                                        for (WebElement container : containers) {
+                                                // LUODAAN PERUS LISTAT TÄSSÄ aina uudelleen koska jos ne on loopin
+                                                // ulkopuolella niin siellä
+                                                // on myös ne
+                                                // edellisen viikon numerot jotka lisätään aina uudelleen sitten
+                                                // hashmappiin
+                                                // joka vääristää datan
+                                                /*
+                                                 * Luodaan List<WebElement> tässä loopin sisällä, koska jos listat
+                                                 * luodaan loopin ulkopuolella, vanhat elementit menettävät pätevyyden
+                                                 * DOM-muutoksen jälkeen (StaleElementReferenceException).
+                                                 */
+                                                List<WebElement> primary = container.findElements(
+                                                                By.cssSelector("div.DrawGameResults-module__drawGameResult--ejackpot--primary--C1wWf"));
+
+                                                List<WebElement> secondary = container.findElements(
+                                                                By.cssSelector("div.DrawGameResults-module__drawGameResult--ejackpot--secondary--w0o4t"));
+
+                                                for (WebElement num : primary) {
+                                                        if (results1.containsKey(num.getText())) {
+                                                                Integer newValue = results1.get(num.getText()) + 1;
+                                                                results1.replace(num.getText(), newValue);
+                                                        } else {
+                                                                results1.put(num.getText(), 1);
+                                                        }
+
+                                                }
+                                                for (WebElement second : secondary) {
+                                                        if (results2.containsKey(second.getText())) {
+                                                                Integer newValue = results2.get(second.getText()) + 1;
+                                                                results2.replace(second.getText(), newValue);
+                                                        } else {
+                                                                results2.put(second.getText(), 1);
+                                                        }
+                                                }
+
+                                        }
+                                        WebElement prevWeekBtn = driver
+                                                        .findElement(By.cssSelector(
+                                                                        "button.NavButton-module_center__Z4M53"));
+                                        prevWeekBtn.click();
+                                }
+
+                                // System.out.println(results1.toString());
+                                // System.out.println(results1.toString());
+
+                                System.out.println(SortArray.sortHashMapPrimary(results1));
+                                System.out.println(SortArray.sortHashMapSecondary(results2));
+
+                                List<String> prim = SortArray.sortHashMapPrimary(results1);
+                                List<String> sec = SortArray.sortHashMapSecondary(results2);
+
+                                List<String> result = new ArrayList<>();
+                                result.add(count + " viikon useimmiten osuvat numerot");
+                                result.addAll(prim);
+                                result.add("*****************");
+                                result.addAll(sec);
+
+                                WriteToFile.writeListToFile(result, "JackpotTulokset.txt");
                         }
 
                 } catch (
@@ -132,7 +209,7 @@ public class ChromeDriverClass {
                 Exception e) {
                         e.printStackTrace();
                 } finally {
-                        driver.quit(); // sulkee selaimen lopuksi
+                        // driver.quit(); // sulkee selaimen lopuksi
                 }
         }
 }

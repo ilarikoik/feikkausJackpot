@@ -40,6 +40,11 @@ public class Lotto {
             WebElement element = driver
                     .findElement(By.cssSelector("div.Notification-module_content__9OWys"));
 
+            // TODO:
+            // muuta TreeMapiksi --> pitää järjestyksen automaattisesti joten sitten on
+            // helppo ottaa n määrä useiten tulleita numeroita tai yhtä montesti
+            // esim list[6].getValue() ... loopilla jos on pienempi tai yhtäsuuri arvo
+            // avaimella nii lisää listaan .. muuten break
             if (element.getText().equals("Ei tuloksia")) {
                 HashMap<String, Integer> results1 = new HashMap<>();
                 HashMap<String, Integer> results2 = new HashMap<>();

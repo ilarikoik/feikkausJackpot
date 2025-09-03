@@ -22,3 +22,14 @@ Lisanumero(t):
 Plusnumero(t):
 20--> 3 kertaa
 21--> 3 kertaa
+
+
+1
+7
+12
+23
+27
+29
+38
+
+20

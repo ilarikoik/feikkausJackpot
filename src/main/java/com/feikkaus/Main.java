@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -14,18 +17,60 @@ public class Main {
 
         String[] words = { "abc", "car", "ada", "racecar", "cool" };
         // int[] nums = { 1, 2, 3, 4, 11 };
-        int[][] nums = {
-                { 1, 2, 4 },
-                { 3, 3, 1 }
-        };
+        int[] nums = { 0, 1, 2, 4, 5, 7 };
 
-        int[] students = { 1, 1, 0, 0 };
-        int[] sandiwches = { 0, 1, 0, 1 };
-
-        // System.out.println(numberOfPairs(new int[] { 1, 3, 2, 1, 3, 2, 2 }));
+        Map<String, Integer> scores = new HashMap<>();
+        scores.put("Liisa", 5);
+        scores.put("Matti", 10);
+        scores.put("Teppo", 7);
+        System.out.println(streamSort(scores));
     }
 
-    //
+    public static List<java.util.Map.Entry<String, Integer>> streamSort(Map<String, Integer> scores) {
+
+        // muutetaan map listaksi ja stream avulla sitten päästään sorttaamaan valuen
+        // mukaan
+        List<Map.Entry<String, Integer>> list = new ArrayList<>();
+
+        // sorttaa valuen mukaan
+        list = scores.entrySet().stream().sorted((a, b) -> a.getValue().compareTo(b.getValue())).toList();
+
+        // filteröi v
+        // list = scores.entrySet().stream().filter(entry -> entry.getValue() <
+        // 10).toList();
+
+        return list;
+    }
+
+    public static List<String> summaryRanges(int[] nums) {
+
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            int start = nums[i];
+            while (i + 1 < nums.length && (nums[i] + 1) == nums[i + 1]) {
+                i++;
+            }
+            if (start != nums[i]) {
+                list.add(start + "->" + nums[i]);
+            } else {
+                list.add(start + "");
+            }
+
+        }
+        return list;
+    }
+
+    // public static int[] searchRange(int[] nums, int target) {
+
+    // for (int i = 0; i < nums.length; i++) {
+    // if(nums[i] == target){
+    // if()
+    // }
+    // }
+    // System.out.println("loppu");
+    // return nums;
+
+    // }
 
     public static int countStudents(int[] students, int[] sandwiches) {
 
